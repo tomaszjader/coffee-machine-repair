@@ -1,7 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Coffee, PenTool as Tools, Clock, Shield, Phone, Mail, Calendar } from 'lucide-react';
+import emailjs from "@emailjs/browser";
+
+interface FormData {
+  [key: string]: string;
+  name: string;
+  email: string;
+  message: string;
+}
 
 function App() {
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    emailjs
+      .send(
+        "service_sqig1hj",
+        "template_3u7q00n",
+        formData,
+        "dJikGHNH4gxm2Viwc"
+      )
+      .then(
+        () => {
+          alert("Wiadomość wysłana! 🎉");
+          setFormData({ name: "", email: "", message: "" });
+        },
+        (error) => {
+          alert("Błąd wysyłania: " + error.text);
+        }
+      );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
       {/* Hero Section */}
@@ -64,21 +103,33 @@ function App() {
                 info="Pon-Pt: 8:00 - 18:00"
               />
             </div>
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
                 placeholder="Imię i nazwisko"
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
               />
               <input
                 type="email"
+                name="email"
                 placeholder="Email"
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                value={formData.email}
+                onChange={handleChange}
+                required
               />
               <textarea
                 placeholder="Wiadomość"
                 rows={4}
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                value={formData.message}
+                name="message"
+                onChange={handleChange}
+                required
               />
               <button className="w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
                 Wyślij Wiadomość
@@ -102,7 +153,13 @@ function App() {
   );
 }
 
-function ServiceCard({ icon, title, description }) {
+interface ServiceCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+function ServiceCard({ icon, title, description }: ServiceCardProps) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
       <div className="mb-4">{icon}</div>
@@ -112,7 +169,13 @@ function ServiceCard({ icon, title, description }) {
   );
 }
 
-function ContactInfo({ icon, title, info }) {
+interface ContactInfoProps {
+  icon: React.ReactNode;
+  title: string;
+  info: string;
+}
+
+function ContactInfo({ icon, title, info }: ContactInfoProps) {
   return (
     <div className="flex items-center gap-4">
       <div className="bg-amber-600 p-3 rounded-full text-white">{icon}</div>
