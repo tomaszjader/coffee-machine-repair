@@ -1,0 +1,1 @@
+Repozytorium zawiera kod strony landingowej dla serwisu naprawy ekspresów do kawy. Strona prezentuje ofertęb oraz formularz kontaktowy. Zbudowana z użyciem HTML, CSS i TypeScript dla szybkiego działania i responsywności.
